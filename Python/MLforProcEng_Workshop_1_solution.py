@@ -1,3 +1,17 @@
+#%% Machine Learning for Process Engineers - Workshop (Part 1)
+#  Tobi Louw, Dept Process Engineering, Stellenbosch University, 2022
+#
+#  We will assume that we are measuring samples from
+#  a process described by the equation:  y = f(t) + eps, 
+#  where "f(t)" is the function described below and "eps" is the 
+#  zero mean Gaussian noise with standard deviation sig_eps, 
+#  such that eps ~ N(0, sig_eps)
+#
+#  Samples of our independent variable "t" also follow a standard normal
+#  distribution
+#
+#  The function "GenerateData" is required to run all the scripts
+
 import types
 import numpy as np
 import matplotlib.pyplot as plt
@@ -6,12 +20,13 @@ from sklearn import linear_model, preprocessing, model_selection
 
 plt.ion()
 
-### Create an example of the data to be generated
+#%% Create an example of the data to be generated
 N = 100
 f = lambda t: 6*np.exp(-t**2) * np.sin(t)
 sig_eps = 0.2
 # Generate 100 observations and plot data
-Data, ax = GenerateData(f, sig_eps, N, True, [-4, 4, -4, 4])
+fig, ax = plt.subplots()
+Data = GenerateData(f, sig_eps, N, ax, [-4, 4, -4, 4])
 
 t = np.linspace(-4,4).reshape(-1, 1)
 Fit = types.SimpleNamespace(t = t,
@@ -20,13 +35,14 @@ Fit = types.SimpleNamespace(t = t,
 ax.plot(Fit.t, Fit.f, 'b', linewidth = 2)
 ax.plot(Fit.t, 0*Fit.t - 3.75, 'b|', Data.t, 0*Data.t - 3.25, 'k|')
 
-### Example 1: fit a first order polynomial model
+#%% Example 1: fit a first order polynomial model
 #  In this first example, we will simply fit a straight line through our
 #  data. We notice that, for each independently generated data SET, the fit
 #  is slightly different
 
 # Generate 100 observations and plot data
-Data, ax = GenerateData(f, sig_eps, N, True, [-4, 4, -4, 4])
+fig, ax = plt.subplots()
+Data = GenerateData(f, sig_eps, N, ax, [-4, 4, -4, 4])
 
 # Fit a first order polynomial model using scikit-learn's LinearRegression method
 # scikit-learn doesn't provide a complete regression summary as MATLAB does.
@@ -49,10 +65,11 @@ ax.legend(['Training data', 'Linear model', 'True function'])
 # time you run the cell, the data-points are slightly different, and so too
 # the model fit.
 
-### Example 2:  Fit a p-order polynomial model
+#%% Example 2:  Fit a p-order polynomial model
 #  We repeat the exercise above, but this time we fit a p-order polynomial to the data
 # Generate a new set of 100 observations
-Data, ax = GenerateData(f, sig_eps, 100, True, [-4, 4, -4, 4])
+fig, ax = plt.subplots()
+Data = GenerateData(f, sig_eps, 100, ax, [-4, 4, -4, 4])
 
 # Fit a p-th order polynomial model
 p = 4
@@ -87,7 +104,7 @@ ax.plot(Fit.t, Fit.poly,'r', Fit.t, Fit.f, 'b')
 # time you run the cell, the data-points are slightly different, and so too
 # the model fit. Do higher-order fits vary more or less than lower order fits?
 
-# %% Example 3:  Estimate the "test error" for a p-order polynomial model
+#%% Example 3:  Estimate the "test error" for a p-order polynomial model
 #  So far, we have only compared our model to the data used to train the
 #  model. We now introduce new data and see how our model performs. We call
 #  the original dataset the "training" dataset, and the new data the "test"
@@ -195,7 +212,8 @@ axs[1,1].legend(['Testing Data MSE'])
 # possible. To address this, we can use cross-validation
 
 # Generate data
-AllData = GenerateData(f, sig_eps, 100)
+fig, axs = plt.subplots(2)
+AllData = GenerateData(f, sig_eps, 100, ax_lims = [-4, 4, -4, 4], ax = axs[1])
 # Set polynomial order and create design matrix using training data,
 # then estimate the test error using cross-validation and fit the model using the training data
 
@@ -209,16 +227,15 @@ X_fit = preprocessing.PolynomialFeatures(p).fit_transform(Fit.t)
 Fit.poly = mdl.predict(X_fit)
 
 # Plot the results
-fig, axs = plt.subplots(2)
 axs[0].boxplot(-Error_CV['test_score'])
 axs[0].set_ylabel('Mean Squared Error')
 axs[0].set_title(f'Cross-validation MSE for {p}th order polynomial')
 
-axs[1].plot(AllData.t, AllData.y, 'ko')
+#axs[1].plot(AllData.t, AllData.y, 'ko')
 axs[1].plot(Fit.t, Fit.poly, 'r', Fit.t, Fit.f, 'b', linewidth = 2)
 axs[1].legend(['Data','Polynomial fit','True function'])
-axs[1].set_xlim(left = -4, right = 4)
-axs[1].set_ylim(bottom = -4, top = 4)
+#axs[1].set_xlim(left = -4, right = 4)
+#axs[1].set_ylim(bottom = -4, top = 4)
 
 # EXERCISE:
 # With a little effort, you can modify this script to loop over all polynomial orders

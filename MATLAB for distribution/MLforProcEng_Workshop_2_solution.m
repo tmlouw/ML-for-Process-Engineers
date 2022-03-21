@@ -3,30 +3,24 @@
 %
 %  The functions "GenerateData" and "CreateGaussDesignMatrix" 
 %  are required to run all the scripts
-
 %% Initialize
 clc
 clear
-
 % Initialize the mean function and create the "Fit" data table
 % (see CCA2021_Workshop_1.m for details)
 f = @(t) 6*exp(-t.^2) .* sin(t);
 sig_eps = 0.2;
-
 t = linspace(-4,4)';
 Fit = table(t);
 Fit.f = f(t);
-
 %% Example 6:  Use feature selection to identify a reduced-order polynomial model
 % The code below has been copied from example 2 exactly, then trimmed down
 % for brevity, and the maximum model order was set to p = 50
 clf
 AllData = GenerateData(f, sig_eps, 100, true, [-4 4 -4 4], "on");
-
 % Set the maximum polynomial model order
 p = 50;
 X = x2fx(AllData.t, (1:p)');
-
 % Fit the linear model but replace "fitlm" with "stepwiselm"
 % Display the model properties using "disp"
 mdl = stepwiselm(X, AllData.y);
@@ -56,7 +50,7 @@ Data = GenerateData(f, sig_eps, 100,true,[-4 4 -4 4],'on');
 % We use 10 G-RBFs with centroids equally spaced between -3 and 3
 % The design matrix is created using the custom function
 % "CreateGaussDesignMatrix". 
-% We will use the defaul shape factor throughout
+% We will use the default shape factor throughout
 % Type "help CreateGaussDesignMatrix" for more info
 c = linspace(-3, 3, 10);      
 X_train = CreateGaussDesignMatrix(Data.t, c);
@@ -76,7 +70,7 @@ plot(Fit.t, Fit.RBF, 'r', Fit.t, Fit.f, 'b', 'LineWidth', 2);
 
 %% Example 8:  Regularize the G-RBF model using ridge regression
 %  The RBFs tend to "fit-to-noise". We can reduce this overfitting by
-%  introducting bias to the model using ridge regression. Here, we are
+%  introducing bias to the model using ridge regression. Here, we are
 %  minimizing the loss function 
 %    J = sum( (y_data - y_predicted)^2 ) + lambda*sum( beta^2 )
 %  Where lambda > 0 is the regularisation parameter.
@@ -84,7 +78,6 @@ plot(Fit.t, Fit.RBF, 'r', Fit.t, Fit.f, 'b', 'LineWidth', 2);
 %  As lambda increases, it penalizes large coefficients more and more
 clf
 Data = GenerateData(f, sig_eps, 100,true,[-4 4 -4 4],'on');
-
 c = linspace(-3, 3, 10);      
 X_train = CreateGaussDesignMatrix(Data.t, c);
 % Performs ridge regression using the function "lasso". 
@@ -94,7 +87,6 @@ X_train = CreateGaussDesignMatrix(Data.t, c);
 % Run the cell for Lambda = 0, Lambda = 0.1, Lambda = 1 and Lambda = 10
 [beta, FitInfo] = lasso(X_train, Data.y, 'Lambda', 0.1, 'Alpha', 1e-6);
 beta0 = FitInfo.Intercept;
-
 % Plot the data at the points "Fit.t"
 X_train = CreateGaussDesignMatrix(Fit.t, c);
 Fit.RBF_ridge = beta0 + X_train*beta;
@@ -113,29 +105,22 @@ plot(Fit.t, Fit.RBF_ridge, 'r', Fit.t, Fit.f, 'b', 'LineWidth', 2);
 % If "Alpha" = 1, then "lasso" performs L1 regularisation (lasso), whereas
 % if "Alpha" ~ 0, then "lasso" performs L2 regularisation (ridge).
 % Type "doc lasso" and "doc Lasso and Elastic Net" for more information
-
 rng(1)
 subplot(2,1,2)
 Data = GenerateData(f, sig_eps, 100,true,[-4 4 -4 4],'on');
-
 c = linspace(-3, 3, 10);      
 X_train = CreateGaussDesignMatrix(Data.t, c);
-
 alpha = 1e-0; % Try 'Alpha' = 1e-3 (gives same results as "ridge") and 'Alpha' = 1
 K = 10; % Number of folds in K-fold cross-validation
 lambda_vec = logspace(-3,0); % Vector of lambda values to evaluate
 [beta, FitInfo] = lasso(X_train, Data.y, 'Alpha', alpha, 'CV', K, 'Lambda', lambda_vec);
-
 % Find the beta values that correspond to the "smallest" model as
 % discussed above, and the corresponding MSE
 beta_best = [FitInfo.Intercept(FitInfo.Index1SE); beta(:,FitInfo.Index1SE)]
 MSE_best = FitInfo.MSE(FitInfo.Index1SE);
-
-
 % Show boxplots of the CV error as a function of lambda
 subplot(2,1,1)
 errorbar(FitInfo.Lambda, FitInfo.MSE, FitInfo.SE);
-
 % Identify the lambda value that corresponds to the largest lambda value
 % (smallest model) within one standard error of the minimum MSE
 hold on
@@ -146,7 +131,6 @@ xlabel('\lambda');
 ylabel('Mean Squared Error'); 
 title(['MSE estimated by K-fold CV, \alpha = ', num2str(alpha)]);
 legend('MSE', 'Optimal MSE','Location', 'NorthWest');
-
 % Evaluate the best fit model
 subplot(2,1,2)
 X_train = CreateGaussDesignMatrix(Fit.t, c);
