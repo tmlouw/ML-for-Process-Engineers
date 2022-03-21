@@ -28,13 +28,14 @@ Data = ReadProcessData('ProcessData.csv')
 X, y = CreateLaggedDesignMatrix(Data, L, 0.2)
 
 #%% Example 10: Linear model fit to timeseries data
-# Fit a linear model without regularization
+# Fit a linear model without regularization. Set "fit_intercept" to false
 mdl = linear_model.LinearRegression(fit_intercept = False)
 mdl.fit(X, y)
 lin_mdl = types.SimpleNamespace(Q = np.eye(X.shape[1]),
                                 coef = mdl.coef_[:, np.newaxis])
-#y_linear = PredictTimeSeries(lin_mdl, Data, L)
+y_linear = PredictTimeSeries(lin_mdl, Data, L)
 
+# Fit a linear model using ridge regression with alpha = 0.01. Set "fit_intercept" to false
 mdl = linear_model.Ridge(fit_intercept = False, alpha = 0.01)
 mdl.fit(X, y)
 rdg_mdl = types.SimpleNamespace(Q = np.eye(X.shape[1]),
@@ -46,10 +47,10 @@ fig, ax = plt.subplots()
 ax.set_ylim(bottom = -1, top = 1)
 
 plt_train, = ax.plot(Data.t, Data.y, 'k.',markersize = 2)
-#plt_lin, = ax.plot(Data.t, y_linear)
+plt_lin, = ax.plot(Data.t, y_linear)
 plt_ridge, = ax.plot(Data.t, y_ridge)
 
-ax.legend([plt_train, plt_ridge], ['Training data','Ridge regression'])
+ax.legend([plt_train, plt_lin, plt_ridge], ['Training data','Linear regression','Ridge regression'])
 
 
 #%% Example 11: Use PCA regression to predict time series

@@ -26,16 +26,10 @@ load ProcessData
 % Display the first five rows of the dataset
 disp(Data(1:5,:))
 
-% Prepare the design matrix "X"
-% Set the maximum number of lagged variables "L" and create the
-% corresponding design matrix, then plot the correlation matrix of X
-L = 10;
-X = CreateLaggedDesignMatrix(Data, L);
-heatmap(corr(X));
-
 % Load the data into an array of predictors and a response vector to 
-% be used for training. 
+% be used for training. Set the number of lagged variables "L"
 % Only use the first 10% of data for training the subsequent models
+L = 10;
 f = 0.1;
 [X, y] = CreateLaggedDesignMatrix(Data, L, f);
 
@@ -65,17 +59,8 @@ legend('Training data', 'No regularisation', 'Ridge regression');
 % "lasso" function and setting Lambda = 0. Do you get the same results?
 % Why or why not?
 
-%% Example 11: Rotating a dataset with 3 dimensions
-% Create a 3D dataset with highly correlated variables
-% to visualize and rotate
-N = 5000;
-Example_X = randn(N, 3);
-X(:,2) = X(:,1) + 0.1*X(:,2);
 
-clf
-plot3(Example_X(:,1), Example_X(:,2), Example_X(:,3),'.');
-xlabel('X_1'); ylabel('X_2'); zlabel('X_3'); 
-%% Example 12: Use PCA regression to predict time series
+%% Example 11: Use PCA regression to predict time series
 %  Fit a model using PCA regression
 %  Obtain the PCA loadings and the fraction variance explained
 [loadings, ~, ~, ~, explained]  = pca(X, 'NumComponents',20);
@@ -115,7 +100,7 @@ legend('Training data','No regularization', 'Ridge', 'PCA');
 % covariance matrix X'*X. How would you obtain "explained"? Recall that the
 % eigenvalues give the variance in each principal component direction.
 
-%% Example 13: Use PLS regression to predict time series
+%% Example 12: Use PLS regression to predict time series
 %  Fit a model using PLS regression
 %  Obtain the PLS loadings and the fraction variance explained
 %  The "plsregress" function provides many more outputs. 

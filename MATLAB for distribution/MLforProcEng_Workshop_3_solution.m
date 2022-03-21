@@ -27,18 +27,13 @@ load ProcessData
 % Display the first five rows of the dataset
 disp(Data(1:5,:))
 
-% Prepare the design matrix "X"
-% Set the maximum number of lagged variables "L" and create the
-% corresponding design matrix, then plot the correlation matrix of X
-L = 10;
-X = CreateLaggedDesignMatrix(Data, L);
-heatmap(corr(X));
-
 % Load the data into an array of predictors and a response vector to 
-% be used for training. 
+% be used for training. Set the number of lagged variables "L"
 % Only use the first 10% of data for training the subsequent models
+L = 10;
 f = 0.1;
 [X, y] = CreateLaggedDesignMatrix(Data, L, f);
+
 
 %% Example 10: Linear model fit to timeseries data
 % Fit a linear model without regularization

@@ -69,13 +69,9 @@ X_train = CreateGaussDesignMatrix(Data.t, c)
 ax.plot(Data.t, X_train,'.', Data.t, 0*Data.t+1.2, 'k|')
 
 # Fit the model using linear regression
-mdl = linear_model.LinearRegression().fit(X_train, Data.y)
 
-# Evaluate the function at the equally spaced "Fit.t" points
-# and plot the function
-X_fit = CreateGaussDesignMatrix(Fit.t, c)
-Fit.RBF = mdl.predict(X_fit)
-ax.plot(Fit.t, Fit.RBF, 'r', Fit.t, Fit.f, 'b', linewidth = 2)
+# Evaluate the function at the equally spaced "Fit.t" points and plot the function
+
 
 #%% Example 8:  Regularize the G-RBF model using ridge regression
 #  The RBFs tend to "fit-to-noise". We can reduce this overfitting by
@@ -94,12 +90,7 @@ X_train = CreateGaussDesignMatrix(Data.t, c)
 # Performs ridge regression using "linear_model.Ridge"
 # "alpha" is the value of the regularization parameter
 # Run the cell for alpha = 0, alpha = 0.1, alpha = 1 and alpha = 10
-mdl = linear_model.Ridge(alpha = 0)
-mdl.fit(X_train, Data.y)
 
-X_fit = CreateGaussDesignMatrix(Fit.t, c)
-Fit.RBF_ridge = mdl.predict(X_fit)
-ax.plot(Fit.t, Fit.RBF_ridge, 'r', Fit.t, Fit.f, 'b', linewidth = 2)
 
 #%% Example 9:  Regularize the G-RBF model using the "lasso" with cross-validation
 # We often use cross-validation to estimate the test error using different
