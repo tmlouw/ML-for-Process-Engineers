@@ -25,3 +25,39 @@ def CreateGaussDesignMatrix(t, c, s = None):
         X[:,i] =  np.exp( -(t-c[i])**2/s).flatten()
 
     return X
+
+def ReadProcessData(filename):
+    RawData = np.genfromtxt(filename, delimiter=',')
+    Data = types.SimpleNamespace(t  = RawData[:, 0],
+                                 u1 = RawData[:, 1],
+                                 u2 = RawData[:, 2],
+                                 y  = RawData[:, 3])
+    Data.t[0] = 0
+    return Data
+
+
+def CreateLaggedDesignMatrix(TimeData, L, f = 1):
+    N = np.rint(f*len(TimeData.t)).astype(int)
+    td = TimeData.__dict__
+    X = np.zeros([N-(L+1), 3*(L+1)])
+    name = ['y', 'u1', 'u2']
+    for j in range(3):
+        for i in range(L+1):
+            X[:, j*(L+1) + i] = td[name[j]][(L-i):N-(i+1)]
+
+    y = TimeData.y[L+1:N]
+    return X, y
+
+def PredictTimeSeries(mdl, TimeData, L):
+    N = len(TimeData.t)
+    y = np.zeros([N,1])
+    X = CreateLaggedDesignMatrix(TimeData, L, f = 1)[0]
+    for i in range(N-L-1):
+        y_lag = y[i:(i+L+1)]
+        yX = np.concatenate((y_lag.transpose(), X[np.newaxis, i, L:-1]), axis = 1)
+        project = np.matmul(yX, mdl.Q)
+        y[L+i] = np.matmul(project, mdl.coef)
+
+    return y
+
+

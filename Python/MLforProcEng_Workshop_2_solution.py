@@ -1,8 +1,5 @@
 #%% Machine Learning for Process Engineers - Workshop (Part 2)
 #  Tobi Louw, Dept Process Engineering, Stellenbosch University, 2022
-#
-#  The functions "GenerateData" and "CreateGaussDesignMatrix"
-#  are required to run all the scripts
 
 import types
 import numpy as np
@@ -17,32 +14,27 @@ plt.ion()
 f = lambda t: 6*np.exp(-t**2) * np.sin(t)
 sig_eps = 0.2
 t = np.linspace(-4,4).reshape(-1, 1)
-Fit = types.SimpleNamespace(t = t,
-                            f = f(t))
+Fit = types.SimpleNamespace(t = t, f = f(t))
 
 #%% Example 6:  Use feature selection to identify a reduced-order polynomial model
-# The code below has been copied from example 2 exactly, then trimmed down
-# for brevity, and the maximum model order was set to p = 50
 fig, axs = plt.subplots(2)
-AllData = GenerateData(f, sig_eps, 100, axs[0], [-4, 4, -4, 4])
+Data = GenerateData(f, sig_eps, 100, axs[0], [-4, 4, -4, 4])
 
 # Set the maximum polynomial model order
-p_max = 2
-X_full = preprocessing.PolynomialFeatures(p_max).fit_transform(AllData.t)
+p_max = 15
+X_full = preprocessing.PolynomialFeatures(p_max).fit_transform(Data.t)
 mdl = linear_model.LinearRegression()
 k = 5
 Error_CV = np.zeros([k, p_max])
 mdl_fs = []
-mdl_list = []
 for p in range(p_max):
-    mdl_fs.append(feature_selection.SequentialFeatureSelector(mdl, n_features_to_select = p+1).fit(X_full, AllData.y))
+    mdl_fs.append(feature_selection.SequentialFeatureSelector(mdl, n_features_to_select = p+1).fit(X_full, Data.y))
     X = mdl_fs[-1].transform(X_full)
-    #mdl_list.append(mdl.fit(X, AllData.y))
-    Error_CV[:,p] = -model_selection.cross_validate(mdl, X, AllData.y, cv = k, scoring = 'neg_mean_squared_error')['test_score']
+    Error_CV[:,p] = -model_selection.cross_validate(mdl, X, Data.y, cv = k, scoring = 'neg_mean_squared_error')['test_score']
 
 best = np.argmin(np.mean(Error_CV, axis = 0))
 X = mdl_fs[best].transform(X_full)
-mdl_best = mdl.fit(X, AllData.y)
+mdl_best = mdl.fit(X, Data.y)
 
 X_fit = preprocessing.PolynomialFeatures(p_max).fit_transform(Fit.t)
 X_fit = mdl_fs[best].transform(X_fit)
