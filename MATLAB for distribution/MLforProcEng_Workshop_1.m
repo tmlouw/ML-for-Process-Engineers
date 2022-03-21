@@ -1,5 +1,4 @@
-%% Control Conference Africa 2021 - Machine Learning Workshop (Part 1)
-%  This script is used as basis for the first part of the ML workshop at CCA2021.
+%% Machine Learning for Process Engineers - Workshop (Part 1)
 %  Tobi Louw, Dept Process Engineering, Stellenbosch University, 2021
 %
 %  We will assume that we are measuring samples from

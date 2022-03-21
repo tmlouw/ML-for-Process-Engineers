@@ -1,5 +1,4 @@
-%% Control Conference Africa 2021 - Machine Learning Workshop (Part 4)
-%  This script is used as basis for the fourth part of the ML workshop at CCA2021.
+%% Machine Learning for Process Engineers - Workshop (Part 4)
 %  Tobi Louw, Dept Process Engineering, Stellenbosch University, 2021
 % 
 %  The context of the exercise is an industrial penicillin fermenter. A simulation 

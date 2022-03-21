@@ -1,5 +1,4 @@
-%% Control Conference Africa 2021 - Machine Learning Workshop (Part 1)
-%  This script is used as basis for the first part of the ML workshop at CCA2021.
+%% Machine Learning for Process Engineers - Workshop (Part 1)
 %  Tobi Louw, Dept Process Engineering, Stellenbosch University, 2021
 %
 %  We will assume that we are measuring samples from
@@ -127,7 +126,7 @@ Test = GenerateData(f, sig_eps, 100);  % Generate a TEST dataset with 100 observ
 % as your data set. Then, use "predict" to evaluate the model predictions
 % at the training data points, e.g. "Train.y_pred = predict(mdl, X)"
 % Calculate the mean squared error (MSE) using 
-%  "MSE_train = sum( (Train.y - Train.y_pred).^2 )"
+%  "MSE_train = mean( (Train.y - Train.y_pred).^2 )"
 p = 4;
 X_train = x2fx(Train.t, (1:p)');    
 mdl = fitlm(X_train, Train.y);         % Train the model using the TRAINING data set
@@ -155,7 +154,7 @@ MSE_Test = mean( (Test.y - Test.y_pred).^2 )
 clear All_Poly_Fits MSE_Train MSE_Test
 
 rng(1)  % We specify the seed of the random number generator for reproducible results
-p_max = 8; % We will evaluate all polynomials up to order 15
+p_max = 8; % We will evaluate all polynomials up to order 8
 All_Poly_Fits = zeros(length(Fit.t), 50, p_max);
 for i = 1:50
     % Generate a new training dataset and a new test dataset
@@ -222,7 +221,6 @@ title('Test Data MSE');
 % Unfortunately, we typically don't have additional datasets to use as test
 % data, or we want to use all of our training data as effectively as
 % possible. To address this, we can use cross-validation
-
 % Generate and plot data
 clf; subplot(2,1,2)
 AllData = GenerateData(f, sig_eps, 100,true,[-4 4 -4 4],'on');

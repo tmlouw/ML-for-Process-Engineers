@@ -1,5 +1,4 @@
-%% Control Conference Africa 2021 - Machine Learning Workshop (Part 3)
-%  This script is used as basis for the third part of the ML workshop at CCA2021.
+%% Machine Learning for Process Engineers - Workshop (Part 3)
 %  Tobi Louw, Dept Process Engineering, Stellenbosch University, 2021
 % 
 % We move to a new example from system identification:  

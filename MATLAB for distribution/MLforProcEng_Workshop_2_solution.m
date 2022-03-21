@@ -1,5 +1,4 @@
-%% Control Conference Africa 2021 - Machine Learning Workshop (Part 2)
-%  This script is used as basis for the second part of the ML workshop at CCA2021.
+%% Machine Learning for Process Engineers - Workshop (Part 2)
 %  Tobi Louw, Dept Process Engineering, Stellenbosch University, 2021
 %
 %  The functions "GenerateData" and "CreateGaussDesignMatrix" 
