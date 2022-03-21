@@ -24,13 +24,13 @@ plt.ion()
 N = 100
 f = lambda t: 6*np.exp(-t**2) * np.sin(t)
 sig_eps = 0.2
+
 # Generate 100 observations and plot data
 fig, ax = plt.subplots()
 Data = GenerateData(f, sig_eps, N, ax, [-4, 4, -4, 4])
 
 t = np.linspace(-4,4).reshape(-1, 1)
-Fit = types.SimpleNamespace(t = t,
-                            f = f(t))
+Fit = types.SimpleNamespace(t = t, f = f(t))
 
 ax.plot(Fit.t, Fit.f, 'b', linewidth = 2)
 ax.plot(Fit.t, 0*Fit.t - 3.75, 'b|', Data.t, 0*Data.t - 3.25, 'k|')
@@ -119,9 +119,9 @@ Test = GenerateData(f, sig_eps, 100)
 # before to fit a polynomial model, this time using "Train.t" and "Train.y"
 # as your data set. Then, use "predict" to evaluate the model predictions
 # at the training data points
-
 p = 4
 X_train = preprocessing.PolynomialFeatures(p).fit_transform(Data.t)
+
 # Train the model using the TRAINING data set, then evaluate at the original training data points
 mdl = linear_model.LinearRegression().fit(X_train, Train.y)
 Train.y_pred = mdl.predict(X_train)
