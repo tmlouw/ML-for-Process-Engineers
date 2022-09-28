@@ -11,7 +11,7 @@
 %  standardized to give the obeservations "X"
 %
 %  The user may then specify to project the datapoints onto a 2D plane by
-%  rotating the plane around the x- or the y-axis, or the project the data
+%  rotating the plane around the x- or the y-axis, or project the data
 %  onto the plane created by the column space of the first two eigenvectors
 %  of the covariance matrix. The latter projection corresponds to the first
 %  two principal components
@@ -36,7 +36,7 @@ Z = (X - mean(X))./std(X);
 % on the angles specified around the x- and y-axis in theta.x and theta.y,
 % respectively
 % 
-% The user is encourages to right click on the number in "theta.x" or
+% The user is encouraged to right click on the number in "theta.x" or
 % "theta.y" and select "Increment Value and Run Selection" to develop an
 % intuition for the projection
 UseEigenVectors = false;
