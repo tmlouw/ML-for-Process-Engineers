@@ -42,6 +42,19 @@ linear_mdl.Q = 1;
 linear_mdl.beta = mdl.Coefficients.Estimate;
 y_linear = PredictTimeSeries(linear_mdl, Data, L);
 
+% Plot and compare the results
+clf
+fill([0 Data.t(round(f*length(Data.t))) Data.t(round(f*length(Data.t))) 0], ...
+     [-0.4 -0.4 0.4 0.4], [0.9 0.9 1],'LineStyle','none');
+hold on
+plot(Data.t, y_linear, ...
+     Data.t, Data.y, 'k.', ...
+     'LineWidth',2);
+ylim([-0.4 0.4])
+legend('Training data', 'No regularisation');
+
+
+%%
 % Fit a linear model with ridge regression and call the prediction
 % "y_ridge"
 ridge_mdl.Q = 1;
