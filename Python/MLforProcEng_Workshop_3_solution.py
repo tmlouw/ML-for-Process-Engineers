@@ -25,7 +25,7 @@ plt.ion()
 
 L = 10
 Data = ReadProcessData('ProcessData.csv')
-X, y = CreateLaggedDesignMatrix(Data, L, 0.2)
+X, y = CreateLaggedDesignMatrix(Data, L, 0.1)
 
 #%% Example 10: Linear model fit to timeseries data
 # Fit a linear model without regularization
@@ -35,7 +35,7 @@ lin_mdl = types.SimpleNamespace(Q = np.eye(X.shape[1]),
                                 coef = mdl.coef_[:, np.newaxis])
 #y_linear = PredictTimeSeries(lin_mdl, Data, L)
 
-mdl = linear_model.Ridge(fit_intercept = False, alpha = 0.01)
+mdl = linear_model.Ridge(fit_intercept = False, alpha = 0.1)
 mdl.fit(X, y)
 rdg_mdl = types.SimpleNamespace(Q = np.eye(X.shape[1]),
                                 coef = mdl.coef_[:, np.newaxis])
